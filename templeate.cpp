@@ -1,32 +1,35 @@
-#include<iostream>
-#include<vector>
-#include<stdlib.h>
-#include<algorithm>
-#include<string.h>
-#include<exception>
-#include<map>
-#include<cmath>
-#include<unordered_map>
-#include<set>
-#include<climits>
-#include<ctype.h>
-#include<queue>
-#include<stack>
-#include<list>
-using namespace std;
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <ctime>
+
+#include <vector>
+#include <array>
+#include <deque>
+#include <queue>
+#include <stack>
+#include <list>
+
+#include <map>
+#include <set>
+#include <unordered_map>
+#include <unordered_set>
+
+#include <algorithm>
+#include <numeric>
+#include <functional>
 
 using namespace std;
 
 int main() {
-	ios::sync_with_stdio(false);
-	cin.tie(nullptr);
-	string line;
-	getline(cin, line);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    string line;
+    getline(cin, line);
 
-	
-	cout << "This is template..." << endl;
-	
-	
-	return 0;
-	
+    cout << "This is template..." << endl;
+
+    return 0;
 }
