@@ -32,7 +32,45 @@
 using namespace std;
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
+    int n, k;
+    cin >> n >> k;
 
+    vector<int> a(n);
+    for (int i = 0; i < n; ++i) cin >> a[i];
+
+    // 特判：k <= 0 没意义，这里按题意默认 k >= 1
+    unordered_map<int, int> cnt;
+    long long ans = 0;
+    int valid = 0;   // 当前窗口里，出现次数 >= k 的元素种数
+    int r = 0;       // 窗口为 [l, r-1]
+
+    for (int l = 0; l < n; ++l) {
+        // 扩展右边界，直到窗口中有某个数出现次数 >= k，或者 r 到头
+        while (r < n && valid == 0) {
+            int x = a[r];
+            cnt[x]++;
+            if (cnt[x] == k) valid++;   // 新增一种达到 k 次的数
+            r++;
+        }
+
+        // 此时窗口是 [l, r-1]
+        if (valid > 0) {
+            // 最小合法右端点是 r-1，右端点从 (r-1) 到 (n-1) 都合法
+            ans += static_cast<long long>(n - r + 1);
+        }
+
+        // 把左端点 l 移出窗口，为下一轮做准备
+        int y = a[l];
+        if (cnt[y] == k) {
+            // 移出后它的次数会从 k 变成 k-1，valid 要减一
+            valid--;
+        }
+        cnt[y]--;
+    }
+
+    cout << ans << "\n";
     return 0;
 }

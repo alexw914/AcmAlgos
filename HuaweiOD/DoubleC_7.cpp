@@ -122,7 +122,7 @@ int main() {
         return false;
     };
 
-    for (int i = 0; i < (int)steps.size(); i++) {
+    for (int i = 0; i < static_cast<int>(steps.size()); i++) {
         long long colInput = steps[i];
         int stepNum = i + 1;
 
@@ -134,10 +134,10 @@ int main() {
             return 0;
         }
 
-        int col = (int)colInput - 1;
+        const int col = static_cast<int>(colInput) - 1;
 
         // 落子
-        int row = place(col, player);
+        const int row = place(col, player);
         if (row == -1) {  // 该列满
             cout << stepNum << ",error\n";
             return 0;
