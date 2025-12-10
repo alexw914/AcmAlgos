@@ -68,22 +68,92 @@ N和单词red、blue、draw、error之间是英文逗号连接。
 #include <bits/stdc++.h>
 using namespace std;
 
-
-
-
 int main() {
-    int m, n;
-    cin >> n >> m;
-    vector<vector<char>> maze(m, vector<char>(n));
-    std::string line;
-    if (cin >> line) {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-        
+    int W, H;
+    cin >> W >> H;
+
+    vector<vector<int>> board(H, vector<int>(W, 0));
+    // 0: empty, 1: red, 2: blue
+
+    vector<long long> steps;
+    long long x;
+    while (cin >> x) steps.push_back(x);
+
+    auto place = [&](int col, int player) {
+        // return row index, -1 if full
+        for (int r = 0; r < H; r++) {
+            if (board[r][col] == 0) {
+                board[r][col] = player;
+                return r;
+            }
+        }
+        return -1;
+    };
+
+    auto countDir = [&](int r, int c, int player, int dr, int dc) {
+        int cnt = 0;
+        int nr = r + dr, nc = c + dc;
+        while (nr >= 0 && nr < H && nc >= 0 && nc < W && board[nr][nc] == player) {
+            cnt++;
+            nr += dr;
+            nc += dc;
+        }
+        return cnt;
+    };
+
+    auto checkWin = [&](int r, int c, int player) {
+        int dirs[4][2] = {
+            {1, 0},   // 横向
+            {0, 1},   // 竖向
+            {1, 1},   // 主对角
+            {1, -1}   // 副对角
+        };
+
+        for (auto &d : dirs) {
+            int dx = d[0], dy = d[1];
+            int count = 1;
+            count += countDir(r, c, player, dx, dy);
+            count += countDir(r, c, player, -dx, -dy);
+            if (count >= 4) return true;
+        }
+        return false;
+    };
+
+    for (int i = 0; i < (int)steps.size(); i++) {
+        long long colInput = steps[i];
+        int stepNum = i + 1;
+
+        int player = (stepNum % 2 == 1 ? 1 : 2);  // red = 1, blue = 2
+
+        // 列越界
+        if (colInput < 1 || colInput > W) {
+            cout << stepNum << ",error\n";
+            return 0;
+        }
+
+        int col = (int)colInput - 1;
+
+        // 落子
+        int row = place(col, player);
+        if (row == -1) {  // 该列满
+            cout << stepNum << ",error\n";
+            return 0;
+        }
+
+        // 判断胜利
+        if (checkWin(row, col, player)) {
+            if (player == 1)
+                cout << stepNum << ",red\n";
+            else
+                cout << stepNum << ",blue\n";
+            return 0;
+        }
     }
 
-
-
-
-
+    // 没有胜负
+    cout << "0,draw\n";
     return 0;
 }

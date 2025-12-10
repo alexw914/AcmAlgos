@@ -76,12 +76,51 @@ int main() {
         rightMax[i] = max(rightMax[i+1], height[i]);
     }
 
-    int ans = 0;
+    // // water[i]：标准接雨水里的“水深”（可能为负，这里先算出来）
+    // vector<int> water(N, 0);
+    // for (int i = 0; i < N; i++) {
+    //     water[i] = min(leftMax[i], rightMax[i]) - height[i];
+    // }
+
+    // waterLevel[i]：该位置“水面高度”，真正的水位高度（山 + 水）
+    vector<int> waterLevel(N, 0);
     for (int i = 0; i < N; i++) {
-        ans += min(leftMax[i], rightMax[i]) - height[i];
+        waterLevel[i] = min(leftMax[i], rightMax[i]);
     }
 
-    cout << ans << endl;
+    int bestCapacity = 0;
+    int bestL = -1, bestR = -1;
+
+    for (int i = 0; i < N; ++i) {
+        for (int j = i + 2; j < N; ++j) {
+
+            int H = min(height[i], height[j]); // 这个水库的水位上限（边界高度）
+
+            int curCapacity = 0;
+            // 枚举区间内部，利用 waterLevel（水面高度）
+            for (int k = i + 1; k <= j - 1; ++k) {
+                int level = min(waterLevel[k], H);  // 这个位置真正能达到的水面高度
+                if (level > height[k]) {
+                    curCapacity += (level - height[k]); // 水深 = 水面高度 - 山高度
+                }
+            }
+
+            if (curCapacity > bestCapacity) {
+                bestCapacity = curCapacity;
+                bestL = i, bestR = j;
+            } else if (curCapacity == bestCapacity && curCapacity > 0) {                 // 蓄水量相同，选距离最近的
+                if ((j - i) < (bestR - bestL)) {
+                    bestL = i, bestR = j;
+                }
+            }
+        }
+    }
+
+    if (bestCapacity <= 0) {
+        cout << 0 << endl;
+    } else {
+        cout << bestL << " " << bestR << ":" << bestCapacity << endl;
+    }
 
     return 0;
 }
