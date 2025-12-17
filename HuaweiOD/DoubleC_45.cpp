@@ -1,6 +1,7 @@
 //
-// Created by Krisw on 2025/11/30.
+// Created by Krisw on 2025/12/15.
 //
+
 /*
 一、题目
 
@@ -45,46 +46,38 @@ AAAA
 
 说明：
 将其中三个连续的A替换为WSD，即可得到完美走位
- */
-
+*/
 #include <bits/stdc++.h>
 using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    string s;
-    cin >> s;
+    string str;
+    cin >> str;
 
-    int N = s.size();
-    int perNum = N / 4;
-
+    const int N = str.size();
     unordered_map<char, int> cntMap;
-    for (char c: s) { cntMap[c]++; }
+    for (auto c: str) { cntMap[c]++; }
 
-    if (cntMap['W'] == perNum && cntMap['A'] == perNum && cntMap['S'] == perNum && cntMap['D'] == perNum) {
-        cout << 0 << "\n";
+    if (cntMap['W'] == N / 4 && cntMap['A'] == N / 4 && cntMap['S'] == N / 4 && cntMap['D'] == N / 4) {
+        cout << 0 << endl;
         return 0;
     }
 
+    int l = 0, r = 0;
     int ans = N;
-    int l = 0, r =0;
-    // 滑动窗口 [l, r] 作为要替换的子串
     while (r < N) {
-        // 将 s[r] 放入窗口内（相当于从外面移除）
-        cntMap[s[r]]--;
-
-        // 尝试右扩后，不断收缩左边界
-        while (l <= r && cntMap['W'] <= perNum && cntMap['A'] <= perNum
-               && cntMap['S'] <= perNum && cntMap['D'] <= perNum) {
-            ans = min(ans, r - l + 1); // 把 s[l] 从窗口内移回窗口外
-            cntMap[s[l]]++;
+        cntMap[str[r]]--;
+        while (l <= r && cntMap['W'] <= N / 4 && cntMap['A'] <= N / 4 && cntMap['S'] <= N / 4 && cntMap['D'] <= N / 4) {
+            ans = min(ans, r - l + 1);
+            cntMap[str[l]]++;
             l++;
         }
         r++;
     }
 
-    cout << ans << "\n";
+    cout << ans << endl;
     return 0;
 }
