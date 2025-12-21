@@ -36,9 +36,44 @@ e -1 1 1 -1
 3
 */
 
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
 int main() {
+    int N;
+    cin >> N;
 
+    const int SHIFT = 100; // 把 [-100,100) 平移到 [0,200)
+    const int SIZE = 200;
+
+    bool grid[SIZE][SIZE] = {false};
+
+    for (int i = 0; i < N; i++) {
+        char op;
+        int x1, y1, x2, y2;
+        cin >> op >> x1 >> y1 >> x2 >> y2;
+
+        int xL = min(x1, x2);
+        int xR = max(x1, x2);
+        int yB = min(y1, y2);
+        int yT = max(y1, y2);
+
+        for (int x = xL; x < xR; x++) {
+            for (int y = yB; y < yT; y++) {
+                int gx = x + SHIFT;
+                int gy = y + SHIFT;
+                grid[gx][gy] = (op == 'd');
+            }
+        }
+    }
+
+    int area = 0;
+    for (int x = 0; x < SIZE; x++) {
+        for (int y = 0; y < SIZE; y++) {
+            if (grid[x][y]) area++;
+        }
+    }
+
+    cout << area << endl;
+    return 0;
 }
