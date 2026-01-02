@@ -30,7 +30,6 @@
 输入
 
 6
-
 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1 1 2 3 4 5 6 7 8 9 10 11 12 12 11 10 9 8 7 6 5 4 3 2 1
 
 
@@ -43,3 +42,58 @@
 最佳升级窗口为：2 1 1 2
 */
 
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+
+    vector<int> visitNum(168, 0);
+    for (int i = 0; i < 168; i++) { cin >> visitNum[i]; }
+
+    int bestStart = -1;
+    int bestEnd = -1;
+    int bestLen = 0; // 当前找到的最大时间窗长度
+    // 枚举每一个作为起点的小时
+    for (int s = 0; s < 168; ++s) {
+        long long sum = 0;
+        int len = 0;
+
+        // 最多扩展 168 小时（绕一圈）
+        while (len < 168) {
+            int idx = (s + len) % 168; // 环形数组
+            if (sum + visitNum[idx] > n) {
+                break;
+            }
+            sum += visitNum[idx];
+            ++len;
+        }
+
+        if (len > 0) {
+            if (len > bestLen) {
+                bestLen = len;
+                bestStart = s;
+                bestEnd = (s + len - 1) % 168;
+            } else if (len == bestLen && len > 0) {
+                // 同样长度，起点更小的优先
+                if (bestStart == -1 || s < bestStart) {
+                    bestStart = s;
+                    bestEnd = (s + len - 1) % 168;
+                }
+            }
+        }
+    }
+
+    if (bestLen == 0) {
+        cout << -1 << " " << -1 << "\n";
+    } else {
+        cout << bestStart << " " << bestEnd << "\n";
+    }
+
+    return 0;
+}

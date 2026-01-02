@@ -107,10 +107,6 @@ int main() {
 
     backtracking(array, 0, 0);
 
-    // for (auto& v : result) {
-    //     for (int x : v) cout << x << " ";
-    //     cout << "\n";
-    // }
     cout << ans << "\n";
 
     return 0;
