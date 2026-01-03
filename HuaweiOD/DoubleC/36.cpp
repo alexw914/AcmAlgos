@@ -62,7 +62,7 @@ using namespace std;
 
 #define inf 0x3f3f3f3f3f3f3f3fLL
 #define infi 0x3f3f3f3f
-using ll = long long;
+using LL = long long;
 using pii = pair<int, int>;
 int s, n, t;
 
@@ -73,7 +73,7 @@ bool check(int x, vector<array<int, 3>> &a){
             mi[a[i][0]] = min(mi[a[i][0]], a[i][2]);//那么我们肯定要钱最少的
         }
     }
-    ll cost = 0;
+    LL cost = 0;
     for (int i = 1; i <= n; i++) {
         cost += mi[i];//记录一下最少花了多少钱
     }

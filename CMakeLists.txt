@@ -10,6 +10,13 @@ file(GLOB_RECURSE files
 )
 
 foreach(file ${files})
+    if(file MATCHES "^${CMAKE_BINARY_DIR}/")
+        continue()
+    endif()
+    if(file MATCHES "/CMakeFiles/")
+        continue()
+    endif()
+
     file(RELATIVE_PATH rel "${CMAKE_CURRENT_SOURCE_DIR}" "${file}")
     string(REPLACE "/" "-" exe "${rel}")
     string(REGEX REPLACE "\\.cpp$" "" exe "${exe}")

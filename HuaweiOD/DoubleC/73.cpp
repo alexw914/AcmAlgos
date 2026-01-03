@@ -56,5 +56,36 @@ int main() {
         cin >> level[i];
     }
 
+    if (n < 3) {
+        cout << 0 << "\n";
+        return 0;
+    }
+
+    long long ans = 0;
+
+    // 枚举中间位置 j, 找到左侧满足的个数和右侧满足的个数，加起来统计
+    for (int j = 1; j <= n - 2; ++j) {
+        long long L_less = 0, L_greater = 0;
+        long long R_less = 0, R_greater = 0;
+
+        // 统计左侧
+        for (int i = 0; i < j; ++i) {
+            if (level[i] < level[j]) ++L_less;
+            else if (level[i] > level[j]) ++L_greater;
+            // 不会有等于，因为题目说职级唯一
+        }
+
+        // 统计右侧
+        for (int k = j + 1; k < n; ++k) {
+            if (level[k] < level[j]) ++R_less;
+            else if (level[k] > level[j]) ++R_greater;
+        }
+
+        ans += L_less * R_greater;   // 上升三元组
+        ans += L_greater * R_less;   // 下降三元组
+    }
+
+    cout << ans << "\n";
+    return 0;
 
 }
