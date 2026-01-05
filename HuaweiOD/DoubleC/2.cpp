@@ -85,18 +85,24 @@ PR1:商品1，单价80元，审批通过，单价低于100元，合并到PO中�
 PR2:商品2，单价120元，审批通过，单价高于100元，单独生成一条PO记录。PR3:审批拒绝，忽略。PR4待审批忽略。
 */
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <unordered_map>
+#include <algorithm>
 using namespace std;
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
     int n;
-    scanf("%d", &n);
-    unordered_map<int, pair<int, int> > lowPoMap;
+    cin >> n;
 
-    vector<vector<int> > highPo;
+    unordered_map<int, pair<int, int>> lowPoMap;
+    vector<vector<int>> highPo;
     while (n--) {
         int id, num, price, state;
-        scanf("%d %d %d %d", &id, &num, &price, &state);
+        cin >> id >> num >> price >> state;
         if (state == 1 || state == 2) { continue; }
         if (price >= 100) { highPo.push_back({id, num, price}); }
         else {

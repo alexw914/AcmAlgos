@@ -44,24 +44,27 @@ minAverageLost及数组中元素取值范围为0~100的整数，数组元素的�
 #include <bits/stdc++.h>
 using namespace std;
 
+vector<int> parseArray(const string &line, char delim) {
+    vector<int> array;
+    stringstream ss(line);
+    string item;
+    while (getline(ss, item, delim)) {
+        array.push_back(stoi(item));
+    }
+    return array;
+}
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int minAvgLost;
     cin >> minAvgLost;
+    cin.ignore();
 
     string line;
-
-    vector<int> lost;
-    if (getline(cin, line)) {
-        stringstream ss(line);
-        vector<int> a;
-        int x;
-        while (ss >> x) {
-            lost.push_back(x);
-        }
-    }
+    getline(cin, line);
+    auto lost = parseArray(line, ' ');
 
     const int N = lost.size();
     vector<int> prefix(N + 1, 0);

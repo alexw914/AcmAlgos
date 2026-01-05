@@ -48,3 +48,59 @@ OUT 2
 4
 NULL
  */
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct TaskInfo {
+    int pri;    // 优先级 (NUM)
+    int seq;    // 进入队列的全局顺序（IN 第几次发生）
+    int id;     // 文件编号（题目要求输出的 x，直接等于 seq）
+};
+
+// 比较器：返回 true 表示 a 的优先级“比 b 低”，堆会把“大的”放在 top
+struct TaskCompare {
+    bool operator()(const TaskInfo& a, const TaskInfo& b) const {
+        if (a.pri != b.pri) {
+            // 优先级高的应该排在前面 => pri 大的在 top
+            return a.pri < b.pri;   // pri 小的“更小”，放下面
+        }
+        // 优先级相同，进入队列早的排在前面 => seq 小的在 top
+        return a.seq > b.seq;       // seq 大的“更小”
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N = 0;
+    cin >> N;
+
+    priority_queue<TaskInfo, vector<TaskInfo>, TaskCompare> pq[6];
+    int inCount = 0;  // “IN” 事件计数，同时也是文件编号 id
+
+    for (int i = 0; i < N; ++i) {
+        string op;
+        cin >> op;
+        if (op == "IN") {
+            int P, NUM;
+            cin >> P >> NUM;
+            ++inCount;
+            TaskInfo j{NUM, inCount, inCount};
+            pq[P].push(j);
+        } else if (op == "OUT") {
+            int P;
+            cin >> P;
+            if (pq[P].empty()) {
+                cout << "NULL\n";
+            } else {
+                TaskInfo j = pq[P].top();
+                pq[P].pop();
+                cout << j.id << "\n";
+            }
+        }
+    }
+
+    return 0;
+}

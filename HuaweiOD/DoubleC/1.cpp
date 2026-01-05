@@ -41,22 +41,28 @@
 蓄水量最大时的边界下标为1 和 6
 */
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
 using namespace std;
+
+vector<int> parseArray(const string &line, char delim) {
+    vector<int> array;
+    stringstream ss(line);
+    string item;
+    while (getline(ss, item, delim)) {
+        array.push_back(stoi(item));
+    }
+    return array;
+}
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    vector<int> height;
     string line;
-    if (std::getline(cin, line)) {
-        std::istringstream iss(line);
-        int x;
-        while (iss >> x) {
-            height.push_back(x);
-        }
-    }
+    getline(cin, line);
+    auto height = parseArray(line, ' ');
 
     const int N = height.size();
     if (N < 3) {
@@ -69,23 +75,17 @@ int main() {
 
     leftMax[0] = height[0];
     for (int i = 1; i < N; i++) {
-        leftMax[i] = max(leftMax[i-1], height[i]);
+        leftMax[i] = max(leftMax[i - 1], height[i]);
     }
-    rightMax[N-1] = height[N-1];
-    for (int i = N-2; i >= 0; i--) {
-        rightMax[i] = max(rightMax[i+1], height[i]);
+    rightMax[N - 1] = height[N - 1];
+    for (int i = N - 2; i >= 0; i--) {
+        rightMax[i] = max(rightMax[i + 1], height[i]);
     }
 
-    // // water[i]：标准接雨水里的“水深”（可能为负，这里先算出来）
-    // vector<int> water(N, 0);
-    // for (int i = 0; i < N; i++) {
-    //     water[i] = min(leftMax[i], rightMax[i]) - height[i];
-    // }
-
-    // waterLevel[i]：该位置“水面高度”，真正的水位高度（山 + 水）
-    vector<int> waterLevel(N, 0);
+    // water[i]：该位置“水面高度”，真正的水位高度（山 + 水）
+    vector<int> water(N, 0);
     for (int i = 0; i < N; i++) {
-        waterLevel[i] = min(leftMax[i], rightMax[i]);
+        water[i] = min(leftMax[i], rightMax[i]);  // 标准接雨水里的“水深”: water[i] = min(leftMax[i], rightMax[i]) - height[i];
     }
 
     int bestCapacity = 0;
@@ -93,13 +93,12 @@ int main() {
 
     for (int i = 0; i < N; ++i) {
         for (int j = i + 2; j < N; ++j) {
-
             int H = min(height[i], height[j]); // 这个水库的水位上限（边界高度）
 
             int curCapacity = 0;
             // 枚举区间内部，利用 waterLevel（水面高度）
             for (int k = i + 1; k <= j - 1; ++k) {
-                int level = min(waterLevel[k], H);  // 这个位置真正能达到的水面高度
+                int level = min(water[k], H); // 这个位置真正能达到的水面高度
                 if (level > height[k]) {
                     curCapacity += (level - height[k]); // 水深 = 水面高度 - 山高度
                 }
@@ -108,7 +107,8 @@ int main() {
             if (curCapacity > bestCapacity) {
                 bestCapacity = curCapacity;
                 bestL = i, bestR = j;
-            } else if (curCapacity == bestCapacity && curCapacity > 0) {                 // 蓄水量相同，选距离最近的
+            } else if (curCapacity == bestCapacity && curCapacity > 0) {
+                // 蓄水量相同，选距离最近的
                 if ((j - i) < (bestR - bestL)) {
                     bestL = i, bestR = j;
                 }

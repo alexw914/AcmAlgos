@@ -42,52 +42,47 @@
 
 *
  */
-#include <bits/stdc++.h>
+
+#include <iostream>
+#include <vector>
 using namespace std;
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
     int n, m;
-    scanf("%d %d", &n, &m);
+    cin >> n >> m;
 
-    // c = n / m 向上取整
     int c = (n + m - 1) / m;
-    // 初始化矩阵为 *
     vector<vector<string>> a(m, vector<string>(c, "*"));
 
-    // 螺旋矩阵写法
     int top = 0, bottom = m - 1, left = 0, right = c - 1;
     int cur = 1;
 
     while (top <= bottom && left <= right && cur <= n) {
-
-        // 从左到右
         for (int j = left; j <= right && cur <= n; j++)
             a[top][j] = to_string(cur++);
         top++;
 
-        // 从上到下
         for (int i = top; i <= bottom && cur <= n; i++)
             a[i][right] = to_string(cur++);
         right--;
 
-        // 从右到左
         for (int j = right; j >= left && cur <= n; j--)
             a[bottom][j] = to_string(cur++);
         bottom--;
 
-        // 从下到上
         for (int i = bottom; i >= top && cur <= n; i--)
             a[i][left] = to_string(cur++);
         left++;
     }
 
-    // 输出矩阵
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < c; j++) {
             cout << a[i][j];
-            if (j + 1 < c) cout << " ";
+            if (j != c - 1) cout << " ";
         }
-        if (i + 1 < m) cout << "\n";
+        if (i != m - 1) cout << endl;
     }
 
     return 0;

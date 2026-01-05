@@ -28,7 +28,7 @@ t>0，0<k<=n
 说明
 可行解为2，选取{0,2},{1,2}两种方式。
 
-类似题目可参考: https://leetcode.cn/problems/combinations/description/
+类似题目: https://leetcode.cn/problems/combinations/description/
  */
 
 #include <bits/stdc++.h>
@@ -46,7 +46,6 @@ void backtracking(int sum, int startIdx) {
 
     if (path.size() == k) {
         if (sum == t) {
-            result.push_back(path);
             ans++;
         }
         return;
