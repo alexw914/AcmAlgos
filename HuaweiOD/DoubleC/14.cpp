@@ -118,20 +118,11 @@ int main() {
             return 0;
         }
 
-        // 跳过空行（题目示例里就有）
-        // 如果你担心有空格，也可以先 trim 一下，这里简单点：
-        if (line.empty())
-            continue;
-
         stringstream row(line);
         string item;
         int cnt = 0;
 
         while (getline(row, item, ',')) {
-            if (item.empty()) {  // 出现空字段
-                cout << -1 << '\n';
-                return 0;
-            }
 
             int score;
             try {

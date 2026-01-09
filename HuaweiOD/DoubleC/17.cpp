@@ -31,18 +31,19 @@
 不同段中version1为2，version2 为4，4-2-1=1
 */
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
 using namespace std;
 
-vector<int> SplitVersion(const string& s) {
-    vector<int> a;
-    string part;
-    stringstream ss(s);
-    while (getline(ss, part, '.')) {
-        // 题目保证每段至少一个数字，所以不会是空
-        a.push_back(stoi(part)); // 自动忽略前导零
+vector<int> parseArray(const string &line, char delim) {
+    vector<int> array;
+    stringstream ss(line);
+    string item;
+    while (getline(ss, item, delim)) {
+        array.push_back(stoi(item));
     }
-    return a;
+    return array;
 }
 
 int main() {
@@ -59,8 +60,8 @@ int main() {
         getline(ss, v2s);
     }
 
-    auto v1 = SplitVersion(v1s);
-    auto v2 = SplitVersion(v2s);
+    auto v1 = parseArray(v1s, '.');
+    auto v2 = parseArray(v2s, '.');
 
     int n = max(v1.size(), v2.size());
     v1.resize(n, 0);
@@ -71,18 +72,12 @@ int main() {
     while (i < n && v1[i] == v2[i]) i++;
 
     // 完全相同
-    if (i == n) {
+    if (i == n || v1[i] > v2[i]) {
         cout << 0 << "\n";
         return 0;
     }
 
-    // version1 >= version2 ?
-    if (v1[i] > v2[i]) {
-        cout << 0 << "\n";
-        return 0;
-    }
-
-    // 检查 version2 在 i 后是否全为 0
+    // version2不同段后不全为0
     for (int j = i + 1; j < n; j++) {
         if (v2[j] != 0) {
             cout << 0 << "\n";

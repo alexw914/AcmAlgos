@@ -30,6 +30,7 @@
 
 #include <bits/stdc++.h>
 using namespace std;
+using LL = long long;
 
 int main() {
     ios::sync_with_stdio(false);
@@ -41,9 +42,8 @@ int main() {
     vector<int> a(n);
     for (int i = 0; i < n; ++i) cin >> a[i];
 
-    // 特判：k <= 0 没意义，这里按题意默认 k >= 1
     unordered_map<int, int> cnt;
-    long long ans = 0;
+    LL ans = 0;
     int valid = 0;   // 当前窗口里，出现次数 >= k 的元素种数
     int r = 0;       // 窗口为 [l, r-1]
 
@@ -59,7 +59,7 @@ int main() {
         // 此时窗口是 [l, r-1]
         if (valid > 0) {
             // 最小合法右端点是 r-1，右端点从 (r-1) 到 (n-1) 都合法
-            ans += static_cast<long long>(n - r + 1);
+            ans += static_cast<LL>(n - r + 1);
         }
 
         // 把左端点 l 移出窗口，为下一轮做准备

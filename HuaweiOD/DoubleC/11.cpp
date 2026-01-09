@@ -56,21 +56,27 @@
 
  */
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <algorithm>
 using namespace std;
+
+vector<int> parseArray(const string &line, char delim) {
+    vector<int> array;
+    stringstream ss(line);
+    string item;
+    while (getline(ss, item, delim)) {
+        array.push_back(stoi(item));
+    }
+    return array;
+}
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     string line;
-    vector<int> length;
-    if (getline(cin, line)) {
-        stringstream ss(line);
-        int x;
-        while (ss >> x) {
-            length.push_back(x);
-        }
-    }
+    auto length = parseArray(line, ' ');
 
     sort(length.begin(), length.end());
     int N = length.size();

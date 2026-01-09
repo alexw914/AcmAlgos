@@ -77,8 +77,6 @@ YES NO NA NO
 #include <bits/stdc++.h>
 using namespace std;
 
-int day = 0;
-
 
 int main() {
     ios::sync_with_stdio(false);
@@ -111,14 +109,10 @@ int main() {
     int need = 0;
     for (int i = 0; i < M; i++) {
         for (int j = 0; j < N; j++) {
-            if (graph[i][j] == 0) {
-                q.push(make_pair(i, j));
-            } else if (graph[i][j] == 1) {
-                need += 1;
-            }
+            if (graph[i][j] == 0) {q.push(make_pair(i, j)); }
+            else if (graph[i][j] == 1) { need += 1; }
         }
     }
-
 
     if (need == 0) {
         cout << 0 << endl;
