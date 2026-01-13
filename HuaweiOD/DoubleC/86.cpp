@@ -40,35 +40,59 @@
 2.交换第1个比特和第3个比特，第一个输入数变为010，计算结果为110，计算结果不变
 3.交换第2个比特和第3个比特，第一个输入数变为001，计算结果为111，计算结果改变
 故只有一种交换会改变计算结果。
+
+
+
+-------------------------------------------------------------------------------------------
+思路抓住一个关键事实：或运算某一位是否受影响，只取决于该位的第二个输入 B 是否为 0。
+
+若 B[k] = 1，则该位输出恒为 1，不管 A[k] 是 0 还是 1，交换不可能改变这一位输出。
+
+若 B[k] = 0，则该位输出等于 A[k]，交换会改变该位输出当且仅当 A[k] 被换成了不同的值。
+
+交换的是 A 的两位 i, j，所以输出是否改变只可能发生在这两位上。
+
+什么时候交换会改变 OR 结果？
+
+交换会改变 OR 结果 当且仅当满足：
+
+A[i] != A[j]（交换的两位不同；否则交换等于没换）
+
+B[i] == 0 或 B[j] == 0（至少有一位在 B 上是 0；否则两位在 B 上都是 1，输出两位都恒为 1，不会变）
+
+因此答案等价于：
+
+所有 A[i]!=A[j] 的对数 － 那些同时满足 B[i]=B[j]=1 且 A[i]!=A[j] 的对数
+---------------------------------------------------------------------------------------------
 */
 
 #include <iostream>
 using namespace std;
 
 int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-  int N;
-  string A, B;
-  cin >> N >> A >> B;
+    int N;
+    string A, B;
+    cin >> N >> A >> B;
 
-  long long cntA0 = 0, cntA1 = 0;
-  long long A0_B1 = 0, A1_B1 = 0;
+    int cntA0 = 0, cntA1 = 0;
+    int A0_B1 = 0, A1_B1 = 0;
 
-  for (int i = 0; i < N; i++) {
-    if (A[i] == '0') cntA0++;
-    else cntA1++;
+    for (int i = 0; i < N; i++) {
+        if (A[i] == '0') cntA0++;
+        else cntA1++;
 
-    if (B[i] == '1') {
-      if (A[i] == '0') A0_B1++;
-      else A1_B1++;
+        if (B[i] == '1') {
+            if (A[i] == '0') A0_B1++;
+            else A1_B1++;
+        }
     }
-  }
 
-  long long totalDiffA = cntA0 * cntA1;
-  long long diffA_in_B1 = A0_B1 * A1_B1;
+    int totalDiffA = cntA0 * cntA1;
+    int diffA_in_B1 = A0_B1 * A1_B1;
 
-  cout << (totalDiffA - diffA_in_B1) << "\n";
-  return 0;
+    cout << (totalDiffA - diffA_in_B1) << "\n";
+    return 0;
 }

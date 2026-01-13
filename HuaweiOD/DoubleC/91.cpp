@@ -104,48 +104,49 @@
 using namespace std;
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-  int m, n, row, col;
-  cin >> m >> n >> row >> col;
+    int m, n, row, col;
+    cin >> m >> n >> row >> col;
 
-  vector<vector<int>> g(row, vector<int>(col, 0));
-  for (int i = 0; i < row; i++) {
-    for (int j = 0; j < col; j++) { cin >> g[i][j]; }
-  }
-
-  int dx[4] = {0,0,1,-1};
-  int dy[4] = {1,-1,0,0};
-  vector<vector<int>> vis(row, vector<int>(col, 0));
-
-  queue<pair<int, int>> q;
-  q.push(make_pair(0, 0));
-  vis[0][0] = 1;
-
-  int step = 0;
-  bool found = false;
-  while (!q.empty() && !found) {
-    auto sz = q.size();
-    for (int i = 0; i < sz; i++) {
-      auto [x, y] = q.front();
-      q.pop();
-      if (x == m && y == n) {
-        found = true; break;
-      }
-      for (int k = 0; k < 4; k++) {
-        auto nx = x + dx[k];
-        auto ny = y + dy[k];
-        if (nx >= 0 && nx < row && ny >= 0 && ny < col && !g[nx][ny] && !vis[nx][ny]) {
-          vis[nx][ny] = 1;
-          q.push({nx, ny});
-        }
-      }
+    vector<vector<int> > g(row, vector<int>(col, 0));
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) { cin >> g[i][j]; }
     }
-    if (!found) { step++; }
-  }
 
-  cout << (found ? step : -1) << endl;
+    int dx[4] = {0, 0, 1, -1};
+    int dy[4] = {1, -1, 0, 0};
+    vector<vector<int> > vis(row, vector<int>(col, 0));
 
-  return 0;
+    queue<pair<int, int> > q;
+    q.push(make_pair(0, 0));
+    vis[0][0] = 1;
+
+    int step = 0;
+    bool found = false;
+    while (!q.empty() && !found) {
+        auto sz = q.size();
+        for (int i = 0; i < sz; i++) {
+            auto [x, y] = q.front();
+            q.pop();
+            if (x == m && y == n) {
+                found = true;
+                break;
+            }
+            for (int k = 0; k < 4; k++) {
+                auto nx = x + dx[k];
+                auto ny = y + dy[k];
+                if (nx >= 0 && nx < row && ny >= 0 && ny < col && !g[nx][ny] && !vis[nx][ny]) {
+                    vis[nx][ny] = 1;
+                    q.push({nx, ny});
+                }
+            }
+        }
+        if (!found) { step++; }
+    }
+
+    cout << (found ? step : -1) << endl;
+
+    return 0;
 }
