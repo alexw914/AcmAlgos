@@ -50,6 +50,7 @@ NULL
  */
 
 #include <bits/stdc++.h>
+#include <climits>
 using namespace std;
 
 struct TaskInfo {

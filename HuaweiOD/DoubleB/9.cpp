@@ -42,7 +42,11 @@
 无法找到满足条件的三元组，返回-1
  */
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <stack>
+#include <climits>
 using namespace std;
 
 int main() {

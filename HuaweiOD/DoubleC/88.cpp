@@ -60,3 +60,13 @@ I2:选择后的核酸检测点IDT2:做完核酸花费的总时间(分钟)M2:去�
 2 80 80
 1 190 100
 */
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+
+  return 0;
+}

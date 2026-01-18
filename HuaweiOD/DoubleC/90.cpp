@@ -83,6 +83,7 @@
 #include <iostream>
 #include <numeric>
 #include <vector>
+#include <climits>
 using namespace std;
 
 vector<int> v(10);
