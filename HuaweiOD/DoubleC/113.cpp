@@ -36,6 +36,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <climits>
 using namespace std;
 
 vector<int> parseArray(const std::string &line) {
