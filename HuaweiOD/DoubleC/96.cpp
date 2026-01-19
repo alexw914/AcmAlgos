@@ -63,33 +63,60 @@
 
 #include <iostream>
 #include <vector>
-#include <climits>
+#include <queue>
+#include <tuple>
 using namespace std;
 
-int ans = INT_MAX;
-int r, c;
-vector<vector<int>> cov;
-int dx[4] = {-1, 0, 1,0};
-int dy[4] = {0, 1, 0, -1};
-
-int dfs(int x, int y, vector<vector<int>>& vis) {
-
-}
-
 int main() {
-    ios_base::sync_with_stdio(false);
+    ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    cin >> r >> c;
-    cov.resize(r, vector<int>(c, 0));
-    for (int i = 0; i < r; i++) {
-        for (int j = 0; j < c; j++) {
+    int R, C;
+    cin >> R >> C;
+
+    vector<vector<int>> cov(R, vector<int>(C));
+    for (int i = 0; i < R; i++)
+        for (int j = 0; j < C; j++)
             cin >> cov[i][j];
+
+    vector<vector<int>> best(R, vector<int>(C, -1));
+
+    // 最大堆: (路径评分, r, c)
+    priority_queue<tuple<int,int,int>> pq;
+
+    best[0][0] = cov[0][0];
+    pq.push({best[0][0], 0, 0});
+
+    int dirs[4][2] = {{1,0},{-1,0},{0,1},{0,-1}};
+
+    while (!pq.empty()) {
+        auto [score, x, y] = pq.top();
+        pq.pop();
+
+        // 剪枝
+        if (score < best[x][y]) continue;
+
+        if (x == R-1 && y == C-1) {
+            cout << score << "\n";
+            return 0;
+        }
+
+        for (auto &d : dirs) {
+            int nx = x + d[0];
+            int ny = y + d[1];
+
+            if (nx < 0 || nx >= R || ny < 0 || ny >= C) continue;
+
+            int candidate = min(score, cov[nx][ny]);
+
+            if (candidate > best[nx][ny]) {
+                best[nx][ny] = candidate;
+                pq.push({candidate, nx, ny});
+            }
         }
     }
-    vector<vector<int>> vis(r, vector<int>(c, 0));
 
-    cout << dfs(0, 0, vis) << endl;
-
+    // 理论上一定能到达
+    cout << best[R-1][C-1] << "\n";
     return 0;
 }

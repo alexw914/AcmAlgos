@@ -70,25 +70,134 @@ num in [1, 2, 4, 8]
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <functional>
 using namespace std;
 
-vector<int> parseArray(const string &line, char delim) {
-    vector<int> array;
-    stringstream ss(line);
+vector<int> parseArray(const string &line) {
+    vector<int> res;
+    string s = line.substr(1, line.size() - 2);
+    stringstream ss(s);
     string item;
-    while (getline(ss, item, delim)) {
-        array.push_back(stoi(item));
+    while (getline(ss, item, ',')) {
+        res.push_back(stoi(item));
     }
-    return array;
+    return res;
+}
+
+vector<vector<int>> combinations(vector<int>& nums, int k) {
+    vector<vector<int>> res;
+    vector<int> path;
+
+    function<void(int)> dfs = [&](int idx) {
+        if (path.size() == k) {
+            res.push_back(path);
+            return;
+        }
+        for (int i = idx; i < nums.size(); i++) {
+            path.push_back(nums[i]);
+            dfs(i + 1);
+            path.pop_back();
+        }
+    };
+
+    dfs(0);
+    return res;
+}
+
+int priority_score(int remain, int num) {
+    if (num == 1) {
+        if (remain == 1) return 4;
+        if (remain == 3) return 3;
+        if (remain == 2) return 2;
+        if (remain == 4) return 1;
+    }
+    if (num == 2) {
+        if (remain == 2) return 3;
+        if (remain == 4) return 2;
+        if (remain == 3) return 1;
+    }
+    if (num == 4) {
+        if (remain == 4) return 1;
+    }
+    return 0;
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
+    ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     string line;
     getline(cin, line);
-    auto array = parseArray(line.substr(1, line.size() - 2), ',');
+    vector<int> array = parseArray(line);
 
+    int num;
+    cin >> num;
+
+    vector<int> linkA, linkB;
+    for (int x : array) {
+        if (x <= 3) linkA.push_back(x);
+        else linkB.push_back(x);
+    }
+
+    // num = 8 特殊处理
+    if (num == 8) {
+        if (array.size() == 8) {
+            cout << "[[";
+            for (int i = 0; i < 8; i++) {
+                if (i) cout << ",";
+                cout << i;
+            }
+            cout << "]]\n";
+        } else {
+            cout << "[]\n";
+        }
+        return 0;
+    }
+
+    struct Link {
+        vector<int>* v;
+        int remain;
+        int score;
+    };
+
+    vector<Link> links;
+
+    if (linkA.size() >= num) {
+        links.push_back({&linkA, 4 - (int)linkA.size(), priority_score(4 - linkA.size(), num)});
+    }
+    if (linkB.size() >= num) {
+        links.push_back({&linkB, 4 - (int)linkB.size(), priority_score(4 - linkB.size(), num)});
+    }
+
+    int bestScore = 0;
+    for (auto& l : links) bestScore = max(bestScore, l.score);
+
+    if (bestScore == 0) {
+        cout << "[]\n";
+        return 0;
+    }
+
+    vector<vector<int>> result;
+
+    for (auto& l : links) {
+        if (l.score == bestScore) {
+            auto comb = combinations(*l.v, num);
+            result.insert(result.end(), comb.begin(), comb.end());
+        }
+    }
+
+    // 输出
+    cout << "[";
+    for (int i = 0; i < result.size(); i++) {
+        if (i) cout << ",";
+        cout << "[";
+        for (int j = 0; j < result[i].size(); j++) {
+            if (j) cout << ",";
+            cout << result[i][j];
+        }
+        cout << "]";
+    }
+    cout << "]\n";
 
     return 0;
 }

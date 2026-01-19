@@ -28,6 +28,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <vector>
 using namespace std;
 
 vector<int> parseArray(const string& line, char delim) {

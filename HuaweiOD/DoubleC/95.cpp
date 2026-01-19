@@ -103,8 +103,49 @@ D为单个用户需要传输的数据量。0<D<1000000
 */
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int R;
+    cin >> R;
+
+    vector<long long> cnt(R+1);
+    for (int i = 0; i <= R; ++i) cin >> cnt[i];
+
+    long long D;
+    cin >> D;
+
+    long long users = 0;
+
+    while (true) {
+        long long need = D;
+        vector<long long> used(R+1, 0);
+
+        for (int r = R; r >= 0 && need > 0; --r) {
+            if (cnt[r] == 0) continue;
+
+            long long cap = 1LL << r;
+            long long can_use = min(cnt[r], need / cap + (need % cap != 0));
+            if (can_use <= 0) continue;
+
+            used[r] = can_use;
+            need -= can_use * cap;
+        }
+
+        if (need > 0) break; // 无法再服务一个用户
+
+        // 扣除使用的信道
+        for (int r = 0; r <= R; ++r) {
+            cnt[r] -= used[r];
+        }
+
+        users++;
+    }
+
+    cout << users << "\n";
     return 0;
 }

@@ -33,19 +33,65 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <numeric>
 using namespace std;
 
+int t;
+vector<int> p;
+vector<bool> used;
+int target;
+
+bool dfs(int start, int curSum, int bucketLeft) {
+    if (bucketLeft == 0) return true;
+    if (curSum == target)
+        return dfs(0, 0, bucketLeft - 1);
+
+    int prev = -1;
+    for (int i = start; i < t; i++) {
+        if (used[i] || p[i] == prev) continue;
+        if (curSum + p[i] > target) continue;
+
+        used[i] = true;
+        if (dfs(i + 1, curSum + p[i], bucketLeft)) return true;
+        used[i] = false;
+
+        prev = p[i];
+
+        // 剪枝
+        if (curSum == 0) break;
+        if (curSum + p[i] == target) break;
+    }
+    return false;
+}
+
 int main() {
-    ios_base::sync_with_stdio(false);
+    ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    int t;
     cin >> t;
-    vector<int> p(t, 0);
-    for (int i = 0; i < t; i++) {
-        cin >> p[i];
+    p.resize(t);
+    for (int i = 0; i < t; i++) cin >> p[i];
+
+    int sum = accumulate(p.begin(), p.end(), 0);
+    int mx = *max_element(p.begin(), p.end());
+
+    sort(p.begin(), p.end(), greater<int>());
+
+    for (int S = mx; S <= sum; S++) {
+        if (sum % S != 0) continue;
+
+        int k = sum / S;
+        target = S;
+        used.assign(t, false);
+
+        if (dfs(0, 0, k)) {
+            cout << S << "\n";
+            return 0;
+        }
     }
 
-
+    // 理论上一定有解（至少 S = sum）
+    cout << sum << "\n";
     return 0;
 }

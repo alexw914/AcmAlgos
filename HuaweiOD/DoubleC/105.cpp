@@ -35,10 +35,90 @@ wo ai zhong guo mei guo ye xing
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <sstream>
 using namespace std;
 
+static vector<string> split_by_space(const string& s) {
+    vector<string> out;
+    istringstream iss(s);
+    string w;
+    while (iss >> w) out.push_back(w); // 自动跳过连续空格
+    return out;
+}
+
+static string join_with_space(const vector<string>& v) {
+    string res;
+    for (int i = 0; i < (int)v.size(); i++) {
+        if (i) res.push_back(' ');
+        res += v[i];
+    }
+    return res;
+}
+
+struct Pattern {
+    vector<string> w;  // 词元序列
+    string raw;        // 原始串（规范化为单空格连接）
+    int raw_len;       // raw.size()
+};
+
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
+    vector<Pattern> patterns;
+    string line;
 
-  return 0;
+    // 读分割词（每行一个），空行结束
+    while (getline(cin, line)) {
+        if (line.empty()) break;
+        auto parts = split_by_space(line);
+        Pattern p;
+        p.w = parts;
+        p.raw = join_with_space(parts);  // 规范化：多空格变单空格
+        p.raw_len = (int)p.raw.size();
+        patterns.push_back(std::move(p));
+    }
+
+    // 读长字符串
+    string text;
+    getline(cin, text);
+    vector<string> words = split_by_space(text);
+
+    // 排序：优先 raw_len 大；再 raw 字典序大
+    sort(patterns.begin(), patterns.end(), [](const Pattern& a, const Pattern& b) {
+        if (a.raw_len != b.raw_len) return a.raw_len > b.raw_len;
+        return a.raw > b.raw;
+    });
+
+    vector<string> tokens;
+    int n = (int)words.size();
+
+    for (int i = 0; i < n; ) {
+        int bestIdx = -1;
+
+        for (int pi = 0; pi < (int)patterns.size(); pi++) {
+            const auto& pw = patterns[pi].w;
+            int k = (int)pw.size();
+            if (i + k > n) continue;
+
+            bool ok = true;
+            for (int t = 0; t < k; t++) {
+                if (words[i + t] != pw[t]) { ok = false; break; }
+            }
+            if (ok) { bestIdx = pi; break; } // 已按规则排序，首个即最优
+        }
+
+        if (bestIdx != -1) {
+            tokens.push_back(patterns[bestIdx].raw);
+            i += (int)patterns[bestIdx].w.size();
+        } else {
+            tokens.push_back(words[i]);
+            i++;
+        }
+    }
+
+    for (auto& t : tokens) cout << "(" << t << ")";
+    cout << "\n";
+    return 0;
 }
