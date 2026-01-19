@@ -32,3 +32,13 @@ wo ai zhong guo mei guo ye xing
 
 (wo)(ai)(zhong guo)(mei guo)(ye)(xing)
 */
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+
+
+  return 0;
+}
