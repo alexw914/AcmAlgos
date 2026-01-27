@@ -44,44 +44,44 @@
 using namespace std;
 
 int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-  int n;
-  cin >> n;
-  vector<int> m(n), x(n);
-  for (int i = 0; i < n; i++) cin >> m[i];
-  for (int i = 0; i < n; i++) cin >> x[i];
+    int n;
+    cin >> n;
+    vector<int> m(n), x(n);
+    for (int i = 0; i < n; i++) cin >> m[i];
+    for (int i = 0; i < n; i++) cin >> x[i];
 
-  int maxSum = 0;
-  for (int i = 0; i < n; i++) {
-    maxSum += m[i] * x[i];
-  }
-
-  vector<char> dp(maxSum + 1, 0);
-  dp[0] = 1;  // 重量 0 一定可以
-
-  for (int i = 0; i < n; i++) {
-    int weight = m[i];
-    int cnt = x[i];
-
-    // 多重背包：逆序枚举
-    for (int s = maxSum; s >= 0; s--) {
-      if (!dp[s]) continue;
-      for (int k = 1; k <= cnt; k++) {
-        int ns = s + k * weight;
-        if (ns > maxSum) break;
-        dp[ns] = 1;
-      }
+    int maxSum = 0;
+    for (int i = 0; i < n; i++) {
+        maxSum += m[i] * x[i];
     }
-  }
 
-  int ans = 0;
-  for (int i = 0; i <= maxSum; i++) {
-    if (dp[i]) ans++;
-  }
+    vector<char> dp(maxSum + 1, 0);
+    dp[0] = 1; // 重量 0 一定可以
 
-  cout << ans << "\n";
+    for (int i = 0; i < n; i++) {
+        int weight = m[i];
+        int cnt = x[i];
 
-  return 0;
+        // 多重背包：逆序枚举
+        for (int s = maxSum; s >= 0; s--) {
+            if (!dp[s]) continue;
+            for (int k = 1; k <= cnt; k++) {
+                int ns = s + k * weight;
+                if (ns > maxSum) break;
+                dp[ns] = 1;
+            }
+        }
+    }
+
+    int ans = 0;
+    for (int i = 0; i <= maxSum; i++) {
+        if (dp[i]) ans++;
+    }
+
+    cout << ans << "\n";
+
+    return 0;
 }

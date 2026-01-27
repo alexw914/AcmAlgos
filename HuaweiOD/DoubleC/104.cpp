@@ -19,9 +19,7 @@
 using namespace std;
 
 vector<vector<int> > parseArrays(string line, int cols) {
-    for (char &c: line) {
-        if (c == '[' || c == ']' || c == ',') c = ' ';
-    }
+    for (char &c: line) { if (c == '[' || c == ']' || c == ',') c = ' '; }
 
     stringstream ss(line);
     vector<vector<int> > res;
@@ -75,3 +73,10 @@ int main() {
 
     return 0;
 }
+
+/*
+https://leetcode.cn/problems/russian-doll-envelopes/description/
+俄罗斯套娃信封问题
+--最长上升子序列
+--最长连续递增子序列
+*/

@@ -53,7 +53,6 @@
 #include <vector>
 using namespace std;
 
-
 int ans = -1;
 int N;
 

@@ -70,6 +70,24 @@ vector<pair<int,int>> parseArray(const string& line) {
     return array;
 }
 
+vector<vector<int> > parseArrays(string line, int cols) {
+    for (char &c: line) { if (c == '(' || c == ')' || c == ',') c = ' '; }
+
+    stringstream ss(line);
+    vector<vector<int> > res;
+    vector<int> cur;
+    int x;
+    while (ss >> x) { // 可以跳过一些两个空格的间隔
+        cur.push_back(x);
+        if (cur.size() == cols) {
+            res.push_back(cur);
+            cur.clear();
+        }
+    }
+    return res;
+}
+
+
 struct Node {
     int pri;
     int seq;   // 越小越早入队

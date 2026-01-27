@@ -57,66 +57,69 @@ N，接下来需要各个基站之间使用光纤进行连接以确保基
 2,3基站已有光纤相连，只有要再 1,3站点 2 向铺设，其成本为 1
  */
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <algorithm>
 using namespace std;
 
 struct Edge {
-    int u, v;
-    int w;
+    int u, v, w;
 };
 
-int Find(vector<int>& p, int x) {
-    if (p[x] != x) p[x] = Find(p, p[x]);
-    return p[x];
-}
+struct DSU {
+    vector<int> p;
+    explicit DSU(int n) : p(n + 1) { iota(p.begin(), p.end(), 0); } // 节点大于0
+    int find(int x) { return p[x] == x ? x : p[x] = find(p[x]); }
 
-void Union(vector<int>& p, int x, int y) {
-    int fx = Find(p, x);
-    int fy = Find(p, y);
-    if (fx != fy) p[fx] = fy;
-}
+    bool unite(int x, int y) {
+        auto fx = find(x), fy = find(y);
+        if (fx == fy) { return true; }
+        p[fy] = fx;
+        return false;
+    }
+};
+
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
     int N, M;
     cin >> N >> M;
 
-    vector<int> p(N + 1);
-    for (int i = 1; i <= N; ++i) p[i] = i;
-
-    vector<Edge> edges;  // 只存 P == 0 的边
+    DSU dsu(N);
+    vector<Edge> edges; // 只存需要新建的边(P==0)
 
     for (int i = 0; i < M; ++i) {
         int X, Y, Z, P;
         cin >> X >> Y >> Z >> P;
-        if (P == 1) {  // 已有光纤，直接合并，无需成本
-            Union(p, X, Y);
-        } else {  // 需要花费 Z 才能铺设
+        if (P == 1) {
+            // 已有光纤：成本为0，直接并入连通性
+            dsu.unite(X, Y);
+        } else {
             edges.push_back({X, Y, Z});
         }
     }
 
-    // Kruskal：按成本排序
-    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) { return a.w < b.w; });
+    sort(edges.begin(), edges.end(), [](const Edge &a, const Edge &b) {
+        return a.w < b.w;
+    });
 
-    int ans = 0;
-    for (auto& e : edges) {
-        int fx = Find(p, e.u);
-        int fy = Find(p, e.v);
-        if (fx != fy) {
-            Union(p, fx, fy);
-            ans += e.w;
-        }
+    long long ans = 0;
+    for (const auto &e: edges) {
+        if (!dsu.unite(e.u, e.v)) { ans += e.w; }
     }
 
     // 检查是否所有节点连通
-    int root = Find(p, 1);
-    for (int i = 2; i <= N; ++i) {
-        if (Find(p, i) != root) {
-            cout << -1 << endl;
+    auto root = dsu.find(1);
+    for (auto i = 2; i <= N; ++i) {
+        if (dsu.find(i) != root) {
+            cout << -1 << "\n";
             return 0;
         }
     }
 
-    cout << ans << endl;
+    cout << ans << "\n";
     return 0;
 }

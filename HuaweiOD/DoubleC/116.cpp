@@ -67,6 +67,7 @@
 #include <sstream>
 #include <vector>
 #include <unordered_map>
+#include <set>
 using namespace std;
 
 vector<int> parseArray(const std::string &line, char delim) {
@@ -79,34 +80,38 @@ vector<int> parseArray(const std::string &line, char delim) {
     return array;
 }
 
-/******** 并查集 ********/
-struct DSU {
-    vector<int> p;
-    explicit DSU(const int n): p(n) { iota(p.begin(), p.end(), 0); }
+bool check(const set<int>& a, const set<int>& b) {
+    int cnt = 0;
+    auto it1 = a.begin();
+    auto it2 = b.begin();
 
-    int find(const int x) {
-        return p[x] == x ? x : p[x] = find(p[x]);
-    }
-
-    void unite(const int x, const int y) {
-        int px = find(x), py = find(y);
-        if (px != py) p[py] = px;
-    }
-};
-
-/******** 判断交集是否 >= 2 ********/
-bool intersectAtLeast2(const vector<int>& a, const vector<int>& b) {
-    int i = 0, j = 0, cnt = 0;
-    while (i < a.size() && j < b.size()) {
-        if (a[i] == b[j]) {
+    while (it1 != a.end() && it2 != b.end()) {
+        if (*it1 == *it2) {
             cnt++;
             if (cnt >= 2) return true;
-            i++; j++;
-        } else if (a[i] < b[j]) i++;
-        else j++;
+            ++it1; ++it2;
+        } else if (*it1 < *it2) {
+            ++it1;
+        } else {
+            ++it2;
+        }
     }
     return false;
 }
+
+bool merge(vector<set<int>>& ranges) {
+    for (int i = 0; i < ranges.size(); i++) {
+        for (int j = i + 1; j < ranges.size(); j++) {
+            if (check(ranges[i], ranges[j])) {
+                ranges[i].insert(ranges[j].begin(), ranges[j].end());
+                ranges.erase(ranges.begin() + j);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 
 int main() {
     ios::sync_with_stdio(false);
@@ -116,63 +121,31 @@ int main() {
     cin >> M;
     cin.ignore();
 
-    vector<vector<int>> port_group(M);
-
-    // 读入并去重排序
+    vector<set<int>> ranges;
     for (int i = 0; i < M; i++) {
         string line;
         getline(cin, line);
-        auto v = parseArray(line, ',');
-        sort(v.begin(), v.end());
-        v.erase(unique(v.begin(), v.end()), v.end());
-        port_group[i] = v;
+        auto array = parseArray(line, ',');
+        ranges.push_back(set<int>(array.begin(), array.end()));
     }
 
-    // 并查集
-    DSU dsu(M);
-
-    // 两两检查是否需要合并
-    for (int i = 0; i < M; i++) {
-        for (int j = i + 1; j < M; j++) {
-            if (intersectAtLeast2(port_group[i], port_group[j])) {
-                dsu.unite(i, j);
-            }
-        }
+    while (true) {
+        if (!merge(ranges)) break;
     }
 
-    // 按输入顺序收集连通分量
-    unordered_map<int, vector<int>> merged;
-    vector<int> order;
-
-    for (int i = 0; i < M; i++) {
-        int root = dsu.find(i);
-        if (!merged.count(root)) order.push_back(root);
-        merged[root].insert(
-            merged[root].end(),
-            port_group[i].begin(),
-            port_group[i].end()
-        );
-    }
-
-    // 输出
     cout << "[";
-    bool firstGroup = true;
-    for (int root : order) {
-        auto &v = merged[root];
-        sort(v.begin(), v.end());
-        v.erase(unique(v.begin(), v.end()), v.end());
-
-        if (!firstGroup) cout << ",";
-        firstGroup = false;
-
+    for (int i = 0; i < ranges.size(); i++) {
         cout << "[";
-        for (int i = 0; i < v.size(); i++) {
-            if (i) cout << ",";
-            cout << v[i];
+        bool first = true;
+        for (const auto x : ranges[i]) {
+            if (!first) cout << ",";
+            first = false;
+            cout << x;
         }
         cout << "]";
+        if (i != ranges.size() - 1) cout << ",";
     }
-    cout << "]\n";
+    cout << "]";
 
     return 0;
 }

@@ -96,7 +96,7 @@ int main() {
     for (auto &task : tasks) {
         int limit = min(task.sla, T);
 
-        if ((int)minHeap.size() < limit) {
+        if (static_cast<int>(minHeap.size()) < limit) {
             minHeap.push(task.val);
         } else if (!minHeap.empty() && minHeap.top() < task.val) {
             minHeap.pop();

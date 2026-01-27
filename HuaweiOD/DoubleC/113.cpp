@@ -66,23 +66,19 @@ int main() {
 
     // 前缀和
     vector<int> prefix(N + 1, 0);
-    for (int i = 0; i < N; ++i) {
-        prefix[i + 1] = prefix[i] + array[i];
+    for (int i = 1; i <= N; ++i) {
+        prefix[i] = prefix[i-1] + array[i];
     }
 
     int min_dist = INT_MAX;
     int min_idx = 0;
-
     for (int i = 0; i + k <= N; i++) {
-
-        auto sub_sum = prefix[i + k] - prefix[i + 1];
-        auto val = array[i] - sub_sum;
-
+        auto val = array[i] - (prefix[i + k - 1] - prefix[i]);
         int dist = abs(mid - val);
 
         if (dist < min_dist || (dist == min_dist && i > min_idx)) {
             min_dist = dist;
-            min_idx = i;
+            min_idx = i; // 返回最大i
         }
     }
 

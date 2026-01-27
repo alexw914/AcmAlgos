@@ -85,48 +85,6 @@ int main() {
     return 0;
 }
 
-// // 全部消除
-// int main() {
-//     ios::sync_with_stdio(false);
-//     cin.tie(nullptr);
-//
-//     string s;
-//     getline(cin, s);
-//
-//     if (s.empty()) {
-//         cout << 0 << '\n';
-//         return 0;
-//     }
-//
-//     // 输入合法性校验
-//     for (char c : s) {
-//         if (!isalpha(static_cast<unsigned char>(c))) {
-//             cout << 0 << '\n';
-//             return 0;
-//         }
-//     }
-//
-//     vector<pair<char,int>> st; // {字符, 连续次数}
-//
-//     for (char c : s) {
-//         if (!st.empty() && st.back().first == c) {
-//             st.back().second++;
-//         } else {
-//             st.push_back({c, 1});
-//         }
-//
-//         // 达到 2 个立即整段消除
-//         if (!st.empty() && st.back().second >= 2) {
-//             st.pop_back();
-//         }
-//     }
-//
-//     // 统计剩余长度
-//     int ans = 0;
-//     for (auto &p : st) {
-//         ans += p.second;
-//     }
-//
-//     cout << ans << '\n';
-//     return 0;
-// }
+/*
+栈
+*/

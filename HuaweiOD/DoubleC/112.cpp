@@ -26,7 +26,6 @@ Alice最近迷上分弹珠游戏，每次从箱子里拿出随机数量的弹珠
 */
 
 #include <iostream>
-#include <vector>
 #include <queue>
 using namespace std;
 

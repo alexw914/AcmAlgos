@@ -90,7 +90,7 @@ int main() {
         // 更新错误窗口
         errWin.push_back(isErr);
         if (isErr) errCnt++;
-        if ((int)errWin.size() > M) {
+        if (static_cast<int>(errWin.size()) > M) {
             if (errWin.front()) errCnt--;
             errWin.pop_front();
         }

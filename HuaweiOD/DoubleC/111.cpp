@@ -55,9 +55,9 @@ Query 2 4
 第2条命令:Add36表示第3个营地增加6个人无需输出
 第3条命令:Query24表示查询第2到第4个营地的总人数，结果:2+8=10 第一个输出是:10，注意这里第3个营地人数在第2条命令中增加了6
  */
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
-
 using LL = long long;
 
 int main() {

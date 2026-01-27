@@ -31,34 +31,34 @@
 #include <vector>
 using namespace std;
 
-vector<int> parseArray(const string& line, char delim) {
-  vector<int> array;
-  stringstream ss(line);
-  string item;
-  while (getline(ss, item, delim)) {
-    array.push_back(stoi(item));
-  }
-  return array;
+vector<int> parseArray(const string &line, char delim) {
+    vector<int> array;
+    stringstream ss(line);
+    string item;
+    while (getline(ss, item, delim)) {
+        array.push_back(stoi(item));
+    }
+    return array;
 }
 
 int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-  string line;
-  getline(cin, line);
+    string line;
+    getline(cin, line);
 
-  auto a = parseArray(line, ',');
+    auto a = parseArray(line, ',');
 
-  stable_sort(a.begin(), a.end(), [](int x, int y) {
-      return abs(x) % 10 < abs(y) % 10;
-  });
+    stable_sort(a.begin(), a.end(), [](int x, int y) {
+        return abs(x) % 10 < abs(y) % 10;
+    });
 
-  for (int i = 0; i < a.size(); i++) {
-    if (i) cout << ",";
-    cout << a[i];
-  }
-  cout << "\n";
+    for (int i = 0; i < a.size(); i++) {
+        if (i) cout << ",";
+        cout << a[i];
+    }
+    cout << "\n";
 
-  return 0;
+    return 0;
 }

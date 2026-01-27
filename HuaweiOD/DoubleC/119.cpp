@@ -50,38 +50,37 @@
 如果选择发放 10元+80元=90元 的补贴来抢2,5号店铺的票，总共发放了90元补贴(抢了5号店铺的票后，现在1号店铺只要2票就能胜出)所以最少发放60元补贴
 */
 
-
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <climits>
 using namespace std;
+using LL = long long;
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int n, m;
-    char comma;
-    cin >> n >> comma >> m;
+    char c;
+    cin >> n >> c >> m;
 
-    vector<vector<long long>> cost(m + 1);
+    vector<vector<int>> cost(m + 1);
     vector<int> cnt(m + 1, 0);
 
     for (int i = 0; i < n; ++i) {
-        int p;
-        long long q;
-        cin >> p >> comma >> q;
+        int p; LL q;
+        cin >> p >> c >> q;
         cnt[p]++;
         if (p != 1) cost[p].push_back(q);
     }
 
     int cnt1 = cnt[1];
-    int maxOther = 0;
+    int mx = 0;
     for (int i = 2; i <= m; ++i)
-        maxOther = max(maxOther, cnt[i]);
+        mx = max(mx, cnt[i]);
 
-    if (cnt1 > maxOther) {
+    if (cnt1 > mx) {
         cout << 0 << '\n';
         return 0;
     }
@@ -89,40 +88,85 @@ int main() {
     for (int i = 2; i <= m; ++i)
         sort(cost[i].begin(), cost[i].end());
 
-    long long ans = LLONG_MAX;
+    LL ans = LLONG_MAX;
 
-    for (int T = 0; T <= n; ++T) {
-        long long money = 0;
-        int bought = 0;
-        vector<long long> spare;
+    for (int T = 0; T < mx; ++T) {
+        LL base_cost = 0;
+        int base_taken = 0;
+
+        vector<LL> rest;
 
         for (int i = 2; i <= m; ++i) {
-            if (cnt[i] > T) {
-                int need = cnt[i] - T;
-                for (int k = 0; k < need; ++k) {
-                    money += cost[i][k];
-                    bought++;
+            int need = max(0, cnt[i] - T);
+            for (int j = 0; j < cost[i].size(); ++j) {
+                if (j < need) {
+                    base_cost += cost[i][j];
+                    base_taken++;
+                } else {
+                    rest.push_back(cost[i][j]);
                 }
-                for (int k = need; k < (int)cost[i].size(); ++k)
-                    spare.push_back(cost[i][k]);
-            } else {
-                for (long long c : cost[i])
-                    spare.push_back(c);
             }
         }
 
-        int cur1 = cnt1 + bought;
-        int needMore = max(0, T + 1 - cur1);
+        int cur1 = cnt1 + base_taken;
+        if (cur1 > T) {
+            ans = min(ans, base_cost);
+            continue;
+        }
 
-        if ((int)spare.size() < needMore) continue;
+        int extra = T - cur1 + 1;
+        if (rest.size() < extra) continue;
 
-        nth_element(spare.begin(), spare.begin() + needMore, spare.end());
-        for (int i = 0; i < needMore; ++i)
-            money += spare[i];
+        nth_element(rest.begin(), rest.begin() + extra, rest.end());
+        sort(rest.begin(), rest.begin() + extra);
 
-        ans = min(ans, money);
+        LL extra_cost = 0;
+        for (int i = 0; i < extra; ++i) extra_cost += rest[i];
+
+        ans = min(ans, base_cost + extra_cost);
     }
 
     cout << ans << '\n';
     return 0;
 }
+
+/*
+贪心策略
+按店铺分组所有选民：
+
+对每个店铺 i (i ≠ 1)，收集它的选民补贴成本列表 costs[i] 并排序。
+
+枚举目标最大对手票数 T
+
+让最终所有其他店铺票数 ≤ T
+
+T 从 0 到 mx-1 枚举。
+
+对于某个 T：
+
+对于每个店铺 i：
+
+如果 cnt[i] > T
+
+必须强制收买 cnt[i] - T 个最便宜的选民
+
+记：
+
+base_cost = 所有强制收买的费用之和
+base_taken = 总收买人数
+
+
+剩余可选选民：所有未被强制收买的市民
+
+我们还需要：
+
+cnt1 + base_taken + extra > T
+
+
+即：
+
+extra ≥ T - (cnt1 + base_taken) + 1
+
+
+从剩余选民中选择 extra 个最便宜的即可。
+*/

@@ -48,7 +48,7 @@ int main() {
     cin.tie(nullptr);
 
     cin >> m >> n;
-    g.resize(m, vector<int>(n, 0));
+    vector<vector<int> > g(m, vector<int>(n));
     vector<pair<int, int> > car_pos;
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
