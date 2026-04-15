@@ -80,3 +80,7 @@ private:
         return node;
     }
 };
+
+int main() {
+    return 0;
+}
