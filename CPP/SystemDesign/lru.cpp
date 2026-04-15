@@ -9,6 +9,7 @@ using namespace std;
 struct Node {
     int k = 0, v = 0;
     Node *prev = nullptr, *next = nullptr;
+    Node() {}
     Node(int key, int val) : k(key), v(val) {}
 };
 
@@ -18,7 +19,7 @@ public:
         head = new Node();
         tail = new Node();
         head->next = tail;
-        tail->pre = head;
+        tail->prev = head;
     }
 
     // 命中返回value，同时将数据移动到表头

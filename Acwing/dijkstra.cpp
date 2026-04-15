@@ -50,7 +50,8 @@
 3
 */
 
-#include <bits/stdc++.h>
+#include <vector>
+#include <iostream>
 using namespace std;
 
 int Dijkstra(vector<vector<int> > &g) {

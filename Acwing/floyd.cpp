@@ -58,7 +58,8 @@ impossible
 1
 */
 
-#include <bits/stdc++.h>
+#include <vector>
+#include <iostream>
 using namespace std;
 
 void floyd(vector<vector<int> > &graph) {
