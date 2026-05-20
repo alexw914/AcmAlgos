@@ -2,6 +2,7 @@
 // Created by Krisw on 2026/4/15.
 //
 
+/*
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <winsock2.h>
@@ -385,8 +386,10 @@ void decodeMsg(char *to, char *from) {
     }
     *to = '\0';
 }
+*/
 
 int main(int argc, char *argv[]) {
+#if 0
 #ifdef _WIN32
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -425,6 +428,8 @@ int main(int argc, char *argv[]) {
     CLOSE_SOCKET(lfd);
 #ifdef _WIN32
     WSACleanup();
+#endif
+
 #endif
     return 0;
 }
