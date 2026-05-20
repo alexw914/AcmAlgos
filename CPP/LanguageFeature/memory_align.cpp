@@ -27,6 +27,7 @@ int main() {
     printf("%d\n", sizeof(p));
 
     p += 1;
-    printf("%d", p);
+    printf("%d\n", p);
+
     return 0;
 }
