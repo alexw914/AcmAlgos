@@ -49,7 +49,7 @@ aemanaaor
 
 输入：
 
-()happy(xyz)new(wxy)year(t)
+()happy(xyz)NewSystem(wxy)year(t)
 
 输出：
 happwnewwear
