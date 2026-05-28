@@ -36,32 +36,39 @@ N取值范围:1<=N<=50
 #include <algorithm>
 using namespace std;
 
+class Solution {
+public:
+  int getNthValue(int M, int N) {
+    vector<int> arr;
+    for (int i = 1; i <= M; i++) arr.push_back(i);
+    if (N < M) return arr[N-1];
+    int k = 0;
+    while(arr.size() < N) {
+      int max_num = INT_MIN, min_num = INT_MAX;
+      bool has_same = false;
+      set<int> st;
+      for (int i = k; i < k + M; i++) {
+        max_num = max(max_num, arr[i]);
+        min_num = min(min_num, arr[i]);
+        if (st.count(arr[i])) { has_same = true; }
+        else { st.insert(arr[i]);};
+      }
+      if (has_same) {
+        arr.push_back(max_num + min_num);
+      } else {arr.push_back(max_num - min_num);};
+      k++;
+    }
+    cout << endl;
+    return arr[N-1];
+  }
+};
+
+
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(NULL);
 
-  int M, N;
-  char choma;
-  cin >> M >> choma >> N;
-
-  vector<int> array(M, 0);
-  for (int i = 0; i < M; i++) {
-    array[i] = i+1;
-  }
-
-  while (array.size() < N) {
-    int start = array.size() - M;
-    int maxVal = *max_element(array.begin() + start, array.end());
-    int minVal = *min_element(array.begin() + start, array.end());
-    // 判断前M个元素中是否存在值相同的元素
-    set<int> unique(array.begin() + start, array.end());
-    if (unique.size() < M) {
-      array.push_back(maxVal + minVal);
-    } else {
-      array.push_back(maxVal - minVal);
-    }
-  }
-
-  cout << array[N -1] << endl;
+  auto solution = Solution();
+  cout << solution.getNthValue(5, 8) << endl;
   return 0;
 }

@@ -2,9 +2,8 @@
 // Created by 巫妖王 on 2026/5/22.
 //
 
-
-#include <vector>
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class Solution {
@@ -19,15 +18,16 @@ public:
       idx++;
       n >>= 1;
     }
-    if (idxs.size() < 3) return -1;
+    if (idxs.size() < 3)
+      return -1;
     int dist = idxs[1] - idxs[0] - 1;
     for (int i = 2; i < idxs.size(); i++) {
-      if (dist != idxs[i] - idxs[i-1] - 1) return -1;
+      if (dist != idxs[i] - idxs[i - 1] - 1)
+        return -1;
     }
     return dist;
   }
 };
-
 
 int main() {
   auto solution = Solution();
@@ -38,4 +38,3 @@ int main() {
   cout << endl;
   return 0;
 }
-

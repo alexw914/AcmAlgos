@@ -14,8 +14,8 @@
 补充说明
 1.小明公司的员工人数不超过100人。
 2.员工姓名是字母和数字的组合，姓名长度大于0，小于16字节。
-3.日期录入格式统一采用Year/Month/Day，Year 长度为4，Month和Day长度为1到2，系统保证录入
-日期为合法日期。
+3.日期录入格式统一采用Year/Month/Day，Year
+长度为4，Month和Day长度为1到2，系统保证录入 日期为合法日期。
 4.不考虑同名多位员工的情况，名字一致即可认为是同一员工(在生产系统会通过工号区分，本系统简化处理)。
 
 示例1
@@ -24,7 +24,8 @@
 
 5
 Alice Bob Charlie David Eve Frank Grace Helen
-1985/5/10 1990/10/11 1995/10/11 2000/11/10 2005/05/01 2010/10/13 2015/10/14 2020/5/2
+1985/5/10 1990/10/11 1995/10/11 2000/11/10 2005/05/01 2010/10/13 2015/10/14
+2020/5/2
 
 输出
 
@@ -40,7 +41,8 @@ Alice Bob Charlie David Eve Frank Grace Helen
 
 10
 Alice Bob Charlie David Eve Frank Grace Helen
-1985/05/10 1990/10/11 1995/10/11 2000/11/10 2005/10/13 2010/10/13 2015/10/14 2020/10/15
+1985/05/10 1990/10/11 1995/10/11 2000/11/10 2005/10/13 2010/10/13 2015/10/14
+2020/10/15
 
 输出
 
@@ -52,55 +54,58 @@ Alice Bob Charlie David Eve Frank Grace Helen
 */
 
 #include <iostream>
-#include <sstream>
 #include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 using namespace std;
 
 struct BirthDay {
   int year;
-  int month;
+  int mouth;
   int day;
 };
 
-BirthDay parseBirthDay(string& str) {
+BirthDay parseString(const string &str) {
   stringstream ss(str);
+  BirthDay ans;
   string item;
-  BirthDay birthDay;
   getline(ss, item, '/');
-  birthDay.year = stoi(item);
+  ans.year = stoi(item);
   getline(ss, item, '/');
-  birthDay.month = stoi(item);
+  ans.mouth = stoi(item);
   getline(ss, item, '/');
-  birthDay.day = stoi(item);
-  return birthDay;
+  ans.day = stoi(item);
+  return ans;
 }
 
-vector<string> parseArray(const string& str) {
-  stringstream ss(str);
-  string item;
-  vector<string> arr;
-  while (getline(ss, item, ' ')) {
-    arr.push_back(item);
+class Solution {
+public:
+  int countBirthdayGifts(int month, vector<string> &employees,
+                         vector<string> &birthdays) {
+    const int N = employees.size();
+    map<string, string> mp;
+    for (int i = 0; i < N; i++) {
+      mp[employees[i]] = birthdays[i];
+    }
+
+    int cnt = 0;
+    for (auto &[k, v] : mp) {
+      auto birth = parseString(v);
+      if (birth.mouth == month)
+        cnt++;
+    }
+
+    return cnt;
   }
-  return arr;
-}
+};
 
 int main() {
-  int m;
-  cin >> m;
-  cin.ignore();
-  string line;
-  getline(cin, line);
-  auto names = parseArray(line);
-
-  getline(cin, line);
-  auto dates = parseArray(line);
-
-  int ans = 0;
-  for (auto& date:dates) {
-    if (parseBirthDay(date).month == m) { ans++;}
-  }
-  cout << ans << endl;
-  return 0;
-
+  auto solution = Solution();
+  vector<string> employees = {"Alice", "Bob",   "Charlie", "David",
+                              "Eve",   "Frank", "Grace",   "Helen"};
+  vector<string> birthdays = {"1985/05/10", "1990/10/11", "1995/10/11",
+                              "2000/11/10", "2005/10/13", "2010/10/13",
+                              "2015/10/14", "2020/10/15"};
+  cout << solution.countBirthdayGifts(10, employees, birthdays) << endl;
 }

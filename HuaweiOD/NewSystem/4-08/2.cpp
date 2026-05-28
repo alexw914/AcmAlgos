@@ -42,6 +42,7 @@
 #include <sstream>
 using namespace std;
 
+class Solution {
 vector<string> split(const string &s) {
   vector<string> ops;
   int i = 0;
@@ -67,51 +68,54 @@ int getInt(const string &s) {
   catch(...) { return -1; }
 }
 
+
+public:
+    int getErrorCount(string rules) {
+        auto ops = split(rules);
+        map<int, int> mp;
+        int ans = 0;
+        for (auto& op : ops) {
+            string rule, rule_id, rule_index;
+            stringstream ss(op);
+            getline(ss, rule, ' ');
+            getline(ss, rule_id, ' ');
+            getline(ss, rule_index);
+            cout << rule << "," << rule_id << "," << rule_index << endl;
+            if (rule.empty()) { ans++;}
+            else if (rule == "add_rule") {
+            if (!rule_id.empty() && !rule_index.empty() && getInt(rule_id) >= 1 && getInt(rule_id) <= 9999 &&  getInt(rule_index) >= 1 && getInt(rule_index) <= 9999) {
+                if (mp.count(getInt(rule_id))) {
+                ans++;
+                }
+                else {
+                mp[getInt(rule_id)] = getInt(rule_index);
+                }
+            } else { ans++;}
+            }
+            else if (rule == "mod_rule") {
+            if (!rule_id.empty() && ! rule_index.empty() && getInt(rule_id) >= 1 && getInt(rule_id) <= 9999 &&  getInt(rule_index) >= 1 && getInt(rule_index) <= 9999) {
+                if (mp.count(getInt(rule_id)) && mp[getInt(rule_id)] != getInt(rule_index)) {
+                mp[getInt(rule_id)] = getInt(rule_index);
+                } else {
+                ans++;
+                }
+            } else { ans++;}
+            }
+            else if (rule == "del_rule") {
+            if (!rule_id.empty() && getInt(rule_id) >= 1 && getInt(rule_id) <= 9999) {
+                if (mp.count(getInt(rule_id))) {
+                mp.erase(getInt(rule_id));
+                }
+                else { ans++; }
+            } else {ans++;}
+            }
+        }
+        return ans;
+    }
+};
+
 int main() {
-  string line;
-  getline(cin, line);
-  cout << line << endl;
-  auto ops = split(line);
-  map<int, int> mp;
-  int ans = 0;
-  for (auto& op : ops) {
-    string rule, rule_id, rule_index;
-    stringstream ss(op);
-    getline(ss, rule, ' ');
-    getline(ss, rule_id, ' ');
-    getline(ss, rule_index);
-    cout << rule << "," << rule_id << "," << rule_index << endl;
-    if (rule.empty()) { ans++;}
-    else if (rule == "add_rule") {
-      if (!rule_id.empty() && !rule_index.empty() && getInt(rule_id) >= 1 && getInt(rule_id) <= 9999 &&  getInt(rule_index) >= 1 && getInt(rule_index) <= 9999) {
-        if (mp.count(getInt(rule_id))) {
-          ans++;
-        }
-        else {
-          mp[getInt(rule_id)] = getInt(rule_index);
-        }
-      } else { ans++;}
-    }
-    else if (rule == "mod_rule") {
-      if (!rule_id.empty() && ! rule_index.empty() && getInt(rule_id) >= 1 && getInt(rule_id) <= 9999 &&  getInt(rule_index) >= 1 && getInt(rule_index) <= 9999) {
-        if (mp.count(getInt(rule_id)) && mp[getInt(rule_id)] != getInt(rule_index)) {
-          mp[getInt(rule_id)] = getInt(rule_index);
-        } else {
-          ans++;
-        }
-      } else { ans++;}
-    }
-    else if (rule == "del_rule") {
-      if (!rule_id.empty() && getInt(rule_id) >= 1 && getInt(rule_id) <= 9999) {
-        if (mp.count(getInt(rule_id))) {
-          mp.erase(getInt(rule_id));
-        }
-        else { ans++; }
-      } else {ans++;}
-    }
-  }
-
-  cout << ans << endl;
-
+  auto solution = Solution();
+  cout << solution.getErrorCount("[add_rule rule_id=1 rule_index=9999][mod_rule rule_id=1 rule_index=10][del_rule rule_id=1]") << endl;
   return 0;
 }
