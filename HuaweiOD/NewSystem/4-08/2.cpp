@@ -40,6 +40,7 @@
 #include <iostream>
 #include <map>
 #include <sstream>
+#include <vector>
 using namespace std;
 
 class Solution {

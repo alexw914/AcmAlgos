@@ -33,6 +33,7 @@ file3-2
  */
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main() {
