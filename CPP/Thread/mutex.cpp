@@ -9,6 +9,7 @@
 #include <shared_mutex>
 #include <atomic>
 #include <chrono>
+#include <vector>
 
 using namespace std;
 

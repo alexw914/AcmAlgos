@@ -7,6 +7,7 @@
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include <vector>
 
 int g_current = 0; // 当前要打印的数字
 int g_max_num = 100; // 最大打印值

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <shared_mutex>
 #include <thread>
+#include <vector>
 
 std::atomic cnt = 0;
 int cnt_normal = 0;
