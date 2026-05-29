@@ -35,6 +35,7 @@ N取值范围:1<=N<=50
 #include <set>
 #include <algorithm>
 #include <vector>
+#include <climits>
 using namespace std;
 
 class Solution {
